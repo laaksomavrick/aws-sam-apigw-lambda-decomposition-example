@@ -1,35 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  sam-app
-
-  Sample SAM Template for sam-app
+  root
   
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
-Globals:
-  Function:
-    Timeout: 3
-
 Resources:
   ApiGateway:
     Type: AWS::Serverless::Api
     Properties:
       StageName: v1
-
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function
+  
+  Lambdas:
+    Type: AWS::Serverless::Application
     Properties:
-      PackageType: Image
-      Architectures:
-        - x86_64
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ApiGateway
-            Path: /hello
-            Method: get
-    Metadata:
-      DockerTag: nodejs18.x-v1
-      DockerContext: ./hello-world
-      Dockerfile: Dockerfile
+      Location: lambdas.yaml
+      Parameters:
+        ApiGateway: !Ref ApiGateway
