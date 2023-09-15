@@ -4,14 +4,15 @@ Description: >
   root
   
 Resources:
-  ApiGateway:
-    Type: AWS::Serverless::Api
+
+  Api:
+    Type: AWS::Serverless::Application
     Properties:
-      StageName: v1
+      Location: api.yaml
+      Parameters:
+        HelloWorldFunctionArn: !GetAtt Lambdas.Outputs.HelloWorldFunctionArn 
   
   Lambdas:
     Type: AWS::Serverless::Application
     Properties:
       Location: lambdas.yaml
-      Parameters:
-        ApiGateway: !Ref ApiGateway

@@ -1,0 +1,21 @@
+openapi: 3.0.1
+info:
+  title: sam-app
+  version: '1.0'
+servers:
+  - url: /v1
+paths:
+  /hello:
+    get:
+      security:
+        - {}
+      x-amazon-apigateway-integration:
+        credentials:
+          Fn::GetAtt:
+            - ApiGatewayExecutionRole
+            - Arn
+        type: aws_proxy
+        httpMethod: POST
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HelloWorldFunctionArn}/invocations
+        passthroughBehavior: when_no_match

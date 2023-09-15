@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  api
+
+Parameters:
+  HelloWorldFunctionArn:
+    Type: String
+    Description: The ARN of the HelloWorld Lambda function
+
+Resources:
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+      DefinitionBody:
+        "Fn::Transform":
+          Name: "AWS::Include"
+          Parameters:
+            Location: openapi.yaml
+
+  ApiGatewayExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - apigateway.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Policies:
+        - PolicyName: ApiGatewayExecutionPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action: lambda:*
+                Effect: Allow
+                Resource:
+                  - Ref: HelloWorldFunctionArn
